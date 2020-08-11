@@ -1,0 +1,56 @@
+How to Run Example
+
+1. Start the server on a well-known port.
+
+  $ server 6666
+
+2. Check the server is running.
+
+  $ cat server.log
+  [2004-07-09 12:20:17 ExampleServer.C:55] The server is starting up
+  [2004-07-09 12:20:17 ExampleServer.C:56] port=6666
+
+3. Run the client from the local machine or a remote machine.
+
+  $ client localhost:6666
+  sent a ExampleServiceRequest
+  rcvd a ServiceRequestAck
+  sent a ExampleRequest
+    string: test
+    int: 42
+    double: 2.14
+  rcvd a ExampleReply
+    string: test
+    int: 42
+    double: 2.14
+  sent a DisconnectionRequest
+  $ cat server.log 
+  [2004-07-09 12:20:17 ExampleServer.C:55] The server is starting up
+  [2004-07-09 12:20:17 ExampleServer.C:56] port=6666
+  [2004-07-09 12:20:23 ServiceAccessPoint.C:44] A client is connecting from localhost:35846
+  [2004-07-09 12:20:23 ExampleService.C:64] ExampleService started for client on localhost:35846
+  [2004-07-09 12:20:23 ExampleRequest.C:19] ExampleRequest::run
+  [2004-07-09 12:20:23 ExampleService.C:114] Disconnecting from client on localhost:35846
+
+4. Run the localclient from the local machine.  Supply queue names and sizes that will be used 
+   for interprocess communication.
+
+  $ localclient 6666 request 1000 reply 1000
+  sent a ExampleLocalServiceRequest
+  rcvd a ServiceRequestAck
+  sent a ExampleRequest
+    string: test
+    int: 42
+    double: 2.14
+  rcvd a ExampleReply
+    string: test
+    int: 42
+    double: 2.14
+  sent a DisconnectionRequest
+
+5. Stop the server.
+
+  $ pkill -x server
+  $ tail -1 server.log 
+  [2004-07-09 12:20:52 ServerProcess.C:16] The server is exiting
+
